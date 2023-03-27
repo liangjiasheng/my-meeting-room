@@ -12,9 +12,13 @@ declare module '@vue/runtime-core' {
     ElButton: typeof import('element-plus/es')['ElButton']
     ElForm: typeof import('element-plus/es')['ElForm']
     ElFormItem: typeof import('element-plus/es')['ElFormItem']
+    ElInput: typeof import('element-plus/es')['ElInput']
     ElOption: typeof import('element-plus/es')['ElOption']
     ElSelect: typeof import('element-plus/es')['ElSelect']
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
+    Home: typeof import('./src/components/Home.vue')['default']
+    Room: typeof import('./src/components/Room.vue')['default']
+    User: typeof import('./src/components/User.vue')['default']
     UserMedia: typeof import('./src/components/UserMedia.vue')['default']
   }
   export interface ComponentCustomProperties {

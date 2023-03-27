@@ -50,7 +50,7 @@ async function createWindow() {
       // Consider using contextBridge.exposeInMainWorld
       // Read more on https://www.electronjs.org/docs/latest/tutorial/context-isolation
       nodeIntegration: true,
-      contextIsolation: false,
+      contextIsolation: true,
     },
   });
 
@@ -99,19 +99,19 @@ app.on('activate', () => {
   }
 });
 
-// New window example arg: new windows url
-ipcMain.handle('join', (_, arg) => {
-  const childWindow = new BrowserWindow({
+// 创建用户
+ipcMain.on('user', () => {
+  const window = new BrowserWindow({
     webPreferences: {
       preload,
       nodeIntegration: true,
-      contextIsolation: false,
+      contextIsolation: true,
     },
   });
 
   if (process.env.VITE_DEV_SERVER_URL) {
-    childWindow.loadURL(`${url}#${arg}`);
+    window.loadURL(`${url}#room`);
   } else {
-    childWindow.loadFile(indexHtml, { hash: arg });
+    window.loadFile(indexHtml, { hash: 'user' });
   }
 });

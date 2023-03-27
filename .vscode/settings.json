@@ -3,11 +3,104 @@
   "typescript.tsc.autoDetect": "off",
   "json.schemas": [
     {
-      "fileMatch": [
-        "/*electron-builder.json5",
-        "/*electron-builder.json"
-      ],
+      "fileMatch": ["/*electron-builder.json5", "/*electron-builder.json"],
       "url": "https://json.schemastore.org/electron-builder"
     }
-  ]
+  ],
+  "editor.formatOnSave": true,
+  "editor.tabSize": 2,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[css]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[less]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[vue]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[dotenv]": {
+    "editor.defaultFormatter": "foxundermoon.shell-format"
+  },
+  "[ignore]": {
+    "editor.defaultFormatter": "foxundermoon.shell-format"
+  },
+  "[properties]": {
+    "editor.defaultFormatter": "foxundermoon.shell-format"
+  },
+  "[dockerfile]": {
+    "editor.defaultFormatter": "ms-azuretools.vscode-docker"
+  },
+  "[shellscript]": {
+    "editor.defaultFormatter": "foxundermoon.shell-format"
+  },
+  /** eslint配置 */
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "vue-html",
+    "vue",
+    "html"
+  ],
+  "eslint.run": "onSave",
+  "eslint.options": {
+    "parserOptions": {
+      "ecmaVersion": 2018,
+      "sourceType": "module"
+    },
+    "rules": {
+      "jsx-quotes": 0,
+      "quotes": 0,
+      "absolute-first": 0,
+      "comma-dangle": "off", // 句末用prettier加逗号
+      "array-bracket-spacing": [2, "never"], // 数组内不用空格
+      "indent": [0, 1],
+      "space-before-function-paren": 0, // 函数前空格交给prettier格式化，不提示错误
+      "semi": [2, "always"],
+      "valid-jsdoc": [
+        0,
+        {
+          "requireReturn": false
+        }
+      ],
+      "no-tabs": "off",
+      "no-unused-vars": [
+        1,
+        {
+          "vars": "all",
+          "args": "after-used"
+        }
+      ],
+      "no-mixed-spaces-and-tabs": "off",
+      "standard/no-callback-literal": "off"
+    }
+  },
+  /** perttier 配置 */
+  "prettier.arrowParens": "avoid", // 为单行箭头函数的参数添加圆括号 avoid or always
+  "prettier.bracketSpacing": true, // 在对象字面量声明所使用的的花括号后（{）和前（）输出空格
+  "prettier.endOfLine": "auto", // 结尾是 \n \r \n\r auto
+  "prettier.htmlWhitespaceSensitivity": "ignore", // css/strict/ignore
+  "prettier.insertPragma": false, // 文件的顶部插入一个 @format的特殊注释
+  "prettier.jsxBracketSameLine": false, // 在多行JSX元素最后一行的末尾添加 > 而使 > 单独一行（不适用于自闭和元素）
+  "prettier.jsxSingleQuote": false, // 在jsx中使用单引号代替双引号
+  "prettier.printWidth": 80, // 单行代码输出的最大长度
+  "prettier.proseWrap": "preserve", //
+  "prettier.quoteProps": "as-needed", // 引用对象属性时更改
+  "prettier.semi": true, // 在语句末尾添加分号
+  "prettier.singleQuote": true, // 使用单引号而非双引号
+  "prettier.tabWidth": 2, // 设置每一个水平缩进的空格数
+  "prettier.trailingComma": "es5", // 在任何可能的多行中输入尾逗号
+  "prettier.useTabs": false // 使用tab（制表位）缩进而非空格
 }

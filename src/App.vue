@@ -1,9 +1,7 @@
 <template>
   <div p-10>
-    <UserMedia />
+    <router-view></router-view>
   </div>
 </template>
 
-<script setup lang="ts">
-import UserMedia from "@/components/UserMedia.vue";
-</script>
+<script setup lang="ts"></script>
