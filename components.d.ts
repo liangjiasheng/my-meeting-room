@@ -18,6 +18,8 @@ declare module '@vue/runtime-core' {
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
     Home: typeof import('./src/components/Home.vue')['default']
     Room: typeof import('./src/components/Room.vue')['default']
+    RouterLink: typeof import('vue-router')['RouterLink']
+    RouterView: typeof import('vue-router')['RouterView']
     User: typeof import('./src/components/User.vue')['default']
     UserMedia: typeof import('./src/components/UserMedia.vue')['default']
   }

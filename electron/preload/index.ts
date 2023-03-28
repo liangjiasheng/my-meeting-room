@@ -1,8 +1,8 @@
 const { contextBridge, ipcRenderer, desktopCapturer } = require('electron');
 
 contextBridge.exposeInMainWorld('user', {
-  create: () => {
-    ipcRenderer.send('user');
+  create: (data: string) => {
+    ipcRenderer.send('user', data);
   },
 });
 

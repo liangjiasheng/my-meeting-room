@@ -7,7 +7,7 @@ declare module '*.vue' {
 }
 
 declare interface Window {
-  room: {
-    create: () => {};
+  user: {
+    create: (data: string) => {};
   };
 }

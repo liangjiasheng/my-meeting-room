@@ -100,8 +100,8 @@ app.on('activate', () => {
 });
 
 // 创建用户
-ipcMain.on('user', () => {
-  const window = new BrowserWindow({
+ipcMain.on('user', (e, qs) => {
+  const win = new BrowserWindow({
     webPreferences: {
       preload,
       nodeIntegration: true,
@@ -110,8 +110,9 @@ ipcMain.on('user', () => {
   });
 
   if (process.env.VITE_DEV_SERVER_URL) {
-    window.loadURL(`${url}#room`);
+    win.loadURL(`${url}#user?${qs}`);
   } else {
-    window.loadFile(indexHtml, { hash: 'user' });
+    win.loadFile(indexHtml, { hash: 'user' });
   }
+  win.webContents.openDevTools();
 });

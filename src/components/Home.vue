@@ -99,12 +99,7 @@
         ></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button
-          type="primary"
-          :loading-icon="Eleme"
-          :loading="btnLoading"
-          @click="handleGetUserMedia"
-        >
+        <el-button type="primary" @click="handleGetUserMedia">
           获取用户媒体流
         </el-button>
       </el-form-item>
@@ -112,15 +107,10 @@
         <el-button type="danger" @click="handleClose">关闭</el-button>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="handleCreateRoom">创建房间</el-button>
+        <el-button type="primary" @click="handleCreateUser">创建房间</el-button>
       </el-form-item>
     </el-form>
     <video
-      v-loading="videoLoading"
-      element-loading-text="Loading..."
-      :element-loading-spinner="svg"
-      element-loading-svg-view-box="-10, -10, 50, 50"
-      element-loading-background="rgba(122, 122, 122, 0.8)"
       v-show="stream"
       w-100
       h-50
@@ -129,15 +119,33 @@
       controls
       muted
     ></video>
+
+    <el-form w-screen pl5 pr5 :model="userInfo" :inline="true">
+      <el-form-item label="房间号">
+        <el-input
+          v-model="userInfo.roomId"
+          size="small"
+          placeholder="请输入房间号"
+        ></el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" @click="handleCreateUser">创建房间</el-button>
+      </el-form-item>
+    </el-form>
   </div>
 </template>
 
 <script setup lang="ts">
 import to from 'await-to-js';
 import { ElMessage } from 'element-plus';
-import { Eleme } from '@element-plus/icons-vue';
 import { reactive, ref, onMounted } from 'vue';
-import useGetUserMedia from '../hooks/useGetUserMedia';
+import { useUserMedia } from '@/hooks/useUserMedia';
+import {
+  VIDEO_TOGGLE,
+  AUDIO_TOGGLE,
+  VIEDO_RESOLUTION,
+  FACING_MODE,
+} from '@/constants';
 
 interface Device {
   deviceId: string;
@@ -157,82 +165,6 @@ interface MediaDevice {
   audioOut: Array<Device>;
 }
 
-const VIDEO_TOGGLE = [
-  {
-    label: '开启',
-    value: true,
-  },
-  {
-    label: '关闭',
-    value: false,
-  },
-];
-
-const AUDIO_TOGGLE = [
-  {
-    label: '开启',
-    value: true,
-  },
-  {
-    label: '关闭',
-    value: false,
-  },
-];
-
-const VIEDO_RESOLUTION = [
-  {
-    label: '全高清(1920*1080)',
-    value: {
-      width: 1920,
-      height: 1080,
-    },
-  },
-  {
-    label: '高清(1280*720)',
-    value: {
-      width: 1280,
-      height: 720,
-    },
-  },
-  {
-    label: 'SVGA(800*600)',
-    value: {
-      width: 800,
-      height: 600,
-    },
-  },
-  {
-    label: 'VGA(640*480)',
-    value: {
-      width: 640,
-      height: 480,
-    },
-  },
-];
-
-const FACING_MODE = [
-  {
-    label: '前置摄像头',
-    value: 'user',
-  },
-  {
-    label: '后置摄像头(移动端设备才支持)',
-    value: 'environment',
-    disabled: true,
-  },
-];
-
-const svg = `
-        <path class="path" d="
-          M 30 15
-          L 28 17
-          M 25.61 25.61
-          A 15 15, 0, 0, 1, 15 30
-          A 15 15, 0, 1, 1, 27.99 7.5
-          L 15 15
-        " style="stroke-width: 4px; fill: rgba(0, 0, 0, 0)"/>
-      `;
-
 const constraints = reactive<MediaStreamConstraints>({
   video: true,
   audio: true,
@@ -250,6 +182,10 @@ const deviceInfo = reactive<DeviceInfo>({
   facingMode: '',
 });
 
+const userInfo = reactive({
+  roomId: '',
+});
+
 const resolution = ref({
   width: 1920,
   height: 1080,
@@ -257,13 +193,9 @@ const resolution = ref({
 
 const fps = ref(24);
 
-const btnLoading = ref(false);
+const video = ref<HTMLVideoElement | null>(null);
 
-const videoLoading = ref(false);
-
-let video = ref<HTMLVideoElement | null>(null);
-
-const { stream, getStream, stopStream } = useGetUserMedia(constraints);
+const { stream, getStream, stopStream } = useUserMedia(constraints);
 
 onMounted(async () => {
   await getEnumerateDevices();
@@ -279,37 +211,10 @@ const handleError = (error: Error) => {
 
 const handleClose = () => {
   stopStream();
+  if (video.value) {
+    video.value.srcObject = null;
+  }
 };
-
-// const checkConstraintsValid = () => {
-//   return constraints.video || constraints.audio;
-// };
-
-// const checkMediaDeviceSupported = () => {
-//   return navigator.mediaDevices?.enumerateDevices;
-// };
-
-/**
- * @author liangjiasheng
- * @description 获取用户媒体流
- */
-// const getUserMedia = async () => {
-//   if (!checkMediaDeviceSupported()) {
-//     ElMessage.error('浏览器不支持获取媒体设备。');
-//     return;
-//   }
-//   if (!checkConstraintsValid()) {
-//     ElMessage.error('constraints 中必须包含音视频轨道中的其中一员。');
-//     mediaStream.value = null;
-//     return;
-//   }
-//   const [err, stream] = await to(
-//     navigator.mediaDevices.getUserMedia(constraints)
-//   );
-//   console.log('getUserMedia >>> err, res', err, stream);
-//   if (err) return handleError(err);
-//   return stream;
-// };
 
 /**
  * @author liangjiasheng
@@ -318,13 +223,6 @@ const handleClose = () => {
 const getEnumerateDevices = async () => {
   await getStream();
   stopStream();
-  // if (!stream)
-  //   return ElMessage.warning(
-  //     '请在获取用户媒体流前先授权并同意使用设备摄像头、麦克风。'
-  //   );
-  // stream.getTracks().forEach(track => {
-  //   track.stop();
-  // });
   const [err, devices] = await to(navigator.mediaDevices.enumerateDevices());
   console.log('getEnumerateDevices >>> err, res', err, devices);
   if (err) return handleError(err);
@@ -391,7 +289,7 @@ const handleChangeFacingMode = (mode: string) => {
   };
 };
 
-const handleCreateRoom = () => {
-  window.room.create();
+const handleCreateUser = () => {
+  window.user.create(new URLSearchParams(userInfo).toString());
 };
 </script>

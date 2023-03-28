@@ -14,18 +14,20 @@ const checkConstraintsValid = (constraints: MediaStreamConstraints) => {
  * @author liangjiasheng
  * @description 获取用户媒体流
  */
-export default function useGetUserMedia(constraints: MediaStreamConstraints) {
-  // if (!checkMediaDeviceSupported()) {
-  //   ElMessage.error('浏览器不支持获取媒体设备。');
-  //   return;
-  // }
-  // if (!checkConstraintsValid(constraints)) {
-  //   ElMessage.error('constraints 中必须包含音视频轨道中的其中一员。');
-  //   return;
-  // }
+export const useUserMedia = (
+  constraints: MediaStreamConstraints = { audio: true, video: true }
+) => {
   const stream = ref<MediaStream | null>(null);
 
   const getStream = async () => {
+    if (!checkMediaDeviceSupported()) {
+      ElMessage.error('浏览器不支持获取媒体设备。');
+      throw new Error('浏览器不支持获取媒体设备。');
+    }
+    if (!checkConstraintsValid(constraints)) {
+      ElMessage.error('constraints 中必须包含音视频轨道中的其中一员。');
+      throw new Error('constraints 中必须包含音视频轨道中的其中一员。');
+    }
     const [err, res] = await to(
       navigator.mediaDevices.getUserMedia(constraints)
     );
@@ -49,4 +51,4 @@ export default function useGetUserMedia(constraints: MediaStreamConstraints) {
     getStream,
     stopStream,
   };
-}
+};
